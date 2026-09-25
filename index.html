@@ -37,9 +37,19 @@ rt{font-size:.5em;font-weight:400}
 #label{background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:9px 14px;font-weight:700;font-size:18px;line-height:1.2}
 #label small{font-weight:400;font-size:15px;margin-left:6px}
 #topbar .spacer{flex:1;pointer-events:none}
-#hint{position:fixed;top:calc(74px + env(safe-area-inset-top));left:calc(12px + env(safe-area-inset-left));
-  max-width:min(430px,62vw);background:var(--paper);border:3px solid var(--ink);border-radius:14px;
-  padding:8px 14px;font-size:17px;line-height:1.9}
+#odaiBtn{background:#FFF4C9}
+/* ---- おだい（オッケーで とじる） ---- */
+#odaiOv{background:rgba(31,45,74,.35);z-index:5}
+#odaiOv .card{max-width:min(560px,92vw);gap:14px;padding:22px 26px 26px}
+.odaiTag{display:inline-block;background:var(--ink);color:#fff;font-weight:700;font-size:16px;padding:4px 14px;border-radius:999px}
+#odaiTitle{margin:0;font-size:26px;line-height:1.3;text-align:center}
+#odaiText{margin:0;font-size:20px;line-height:1.9;text-align:left;align-self:stretch;word-break:keep-all;overflow-wrap:anywhere}
+#odaiNote{margin:0;font-size:15px;line-height:1.7;align-self:stretch;color:#44506A;word-break:keep-all;overflow-wrap:anywhere}
+#odaiParts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.odaiPart{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:14px;font-weight:700;
+  background:#F3F7FB;border:2px solid var(--ink);border-radius:12px;padding:6px 8px;min-width:62px}
+.odaiPart svg{width:34px;height:34px}
+#odaiOk{background:var(--go);font-size:26px;padding:14px 40px;border-radius:20px;min-width:220px;min-height:64px}
 #camCtl{position:fixed;right:calc(14px + env(safe-area-inset-right));top:50%;transform:translateY(-50%);
   display:grid;grid-template-columns:54px 54px;gap:10px}
 #camCtl .btn{padding:0;font-size:22px;height:54px}
@@ -87,36 +97,58 @@ rt{font-size:.5em;font-weight:400}
 .bigBtns{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
 .bigBtns .btn{font-size:24px;padding:16px 26px;border-radius:20px;min-width:220px}
 .bigBtns .btn.main{background:var(--go)}
-#stageGrid{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:12px}
 
-@media (max-width:640px){#stageGrid{grid-template-columns:repeat(2,minmax(130px,1fr))}}
-.stg{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:12px 16px;text-align:left;min-height:88px}
-.stg b{font-size:28px}
-.stg span{font-size:17px;font-weight:700;word-break:keep-all}
-.stg.done{background:#FFF4C9}
-.stg.done b::after{content:" ★";color:var(--goal)}
+/* ---- ステージえらび ---- */
+#stageOv{background:
+  radial-gradient(circle at 12% 18%, rgba(255,210,63,.55) 0 7%, transparent 7.5%),
+  radial-gradient(circle at 88% 12%, rgba(214,54,122,.35) 0 5%, transparent 5.5%),
+  radial-gradient(circle at 92% 82%, rgba(24,160,179,.4) 0 8%, transparent 8.5%),
+  radial-gradient(circle at 6% 88%, rgba(242,140,40,.4) 0 6%, transparent 6.5%),
+  linear-gradient(160deg,#BFE3F2 0%,#D8F0D2 55%,#FFF1C2 100%);
+  justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding-top:calc(18px + env(safe-area-inset-top));gap:12px}
+#stageOv .tiles span{width:clamp(38px,6vw,56px);height:clamp(38px,6vw,56px);font-size:clamp(22px,3.8vw,34px)}
+#stageWrap{display:flex;flex-direction:column;gap:12px;width:min(1000px,100%)}
+.sec{border:4px solid var(--ink);border-radius:24px;box-shadow:0 6px 0 var(--ink);padding:10px 14px 14px;background:var(--secbg)}
+.sec h3{margin:0 0 12px;display:flex;align-items:center;gap:10px;font-size:20px}
+.sec h3 i{font-style:normal;display:inline-flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;
+  border-radius:999px;padding:3px 14px;font-size:15px}
+.sec.lv1{--secbg:#E6F7DF;--c1:#7BD389;--c2:#3FAF63}
+.sec.lv2{--secbg:#FFEBD6;--c1:#FFB35C;--c2:#F28C28}
+.sec.lv3{--secbg:#F3E3FF;--c1:#C68BF5;--c2:#8E4FD8}
+.stgRow{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:12px}
+.stg{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:10px 12px 12px;text-align:left;min-height:104px;
+  background:linear-gradient(180deg,#fff 0%,#fff 58%,var(--c1) 58%,var(--c1) 100%);border-radius:18px}
+.stg:nth-child(3n+1){transform:rotate(-1.2deg)} .stg:nth-child(3n+2){transform:rotate(.8deg)} .stg:nth-child(3n){transform:rotate(-.4deg)}
+.stg.press{transform:translateY(4px) rotate(0)}
+.stg b{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;
+  background:var(--c2);color:#fff;font-size:24px;border:3px solid var(--ink);text-shadow:0 2px 0 rgba(31,45,74,.4)}
+.stg .nm{font-size:16px;font-weight:700;word-break:keep-all;line-height:1.35}
+.stg .ic{display:flex;gap:2px;margin-top:auto}
+.stg .ic svg{width:24px;height:24px;background:#fff;border-radius:6px;padding:1px}
+.stg .star{position:absolute;top:-12px;right:-8px;font-size:34px;line-height:1;color:#FFC933;
+  -webkit-text-stroke:2px var(--ink);text-shadow:0 3px 0 var(--ink);transform:rotate(12deg)}
+.stg:not(.done) .star{color:#fff;opacity:.9;-webkit-text-stroke:2px #B8C0CC;text-shadow:none}
+#stageOv > .btn{min-width:180px;font-size:20px;margin-bottom:16px}
 #clearOv{background:rgba(31,45,74,.28)}
 #goalBanner{position:fixed;left:50%;top:calc(120px + env(safe-area-inset-top));transform:translate(-50%,0);pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:10px;
   background:rgba(255,255,255,.95);border:4px solid var(--ink);border-radius:24px;box-shadow:0 8px 0 var(--ink);padding:18px 26px;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
 #goalBanner p{margin:0;font-size:18px;font-weight:700}
 @keyframes pop{from{transform:translate(-50%,0) scale(.3);opacity:0}to{transform:translate(-50%,0) scale(1);opacity:1}}
 #ver{position:fixed;right:6px;bottom:2px;font-size:10px;opacity:.45;pointer-events:none}
-.stgHead{grid-column:1/-1;margin:6px 0 -4px;font-size:18px;font-weight:700;text-align:left}
-.stg.hard{border-style:dashed}
 @media (prefers-reduced-motion:reduce){.btn,#toast{transition:none}#goalBanner{animation:none}}
 </style>
 </head>
 <body>
-<!-- build: 2026-09-25 v2 -->
+<!-- build: 2026-09-25 v3 -->
 
 <div id="hud" class="hide">
   <div id="topbar">
     <button class="btn" id="menuBtn">メニュー</button>
     <div id="label"></div>
+    <button class="btn" id="odaiBtn">？ おだい</button>
     <div class="spacer"></div>
     <button class="btn hide" id="clearAllBtn">ぜんぶ けす</button>
   </div>
-  <div id="hint"></div>
   <div id="camCtl">
     <button class="btn" id="camL" aria-label="ひだりに まわす">◀</button>
     <button class="btn" id="camR" aria-label="みぎに まわす">▶</button>
@@ -135,7 +167,7 @@ rt{font-size:.5em;font-weight:400}
   <div class="tiles"><span>ゴ</span><span>ー</span><span>ル</span><span>！</span></div>
   <p>「⟲ もどす」で もういちど うごかせるよ</p>
 </div>
-<div id="ver">v2026-09-25</div>
+<div id="ver">v2026-09-25b</div>
 
 <div class="ov" id="titleOv">
   <div class="card">
@@ -148,11 +180,20 @@ rt{font-size:.5em;font-weight:400}
   </div>
 </div>
 
-<div class="ov hide" id="stageOv">
+<div class="ov hide scrollable" id="stageOv">
+  <div class="tiles" aria-label="ステージを えらぼう"><span>ス</span><span>テ</span><span>ー</span><span>ジ</span></div>
+  <div id="stageWrap"></div>
+  <button class="btn" id="stageBack">もどる</button>
+</div>
+
+<div class="ov hide" id="odaiOv" role="dialog" aria-modal="true" aria-labelledby="odaiTitle">
   <div class="card">
-    <p class="lead"><b>ステージを えらぼう</b></p>
-    <div id="stageGrid"></div>
-    <button class="btn" id="stageBack">もどる</button>
+    <span class="odaiTag" id="odaiTag">おだい</span>
+    <h2 id="odaiTitle"></h2>
+    <p id="odaiText"></p>
+    <div id="odaiParts"></div>
+    <p id="odaiNote"></p>
+    <button class="btn" id="odaiOk">オッケー！</button>
   </div>
 </div>
 
@@ -257,27 +298,46 @@ const STAGES = [
     inv:{ slope:1, spring:1, block:2 },
     blocks:[[0,1,2],[1,1,2],[3,0,3],[3,1,3],[3,2,3],[1,5,1],[2,5,1],[3,5,1]],
     parts:[['ball',0,1,0],['goal',2,7,0]] },
-  // ---- チャレンジ（むずかしい）----
-  { name:'ばねの かいだん', hard:true,
+  // ---- チャレンジ（むずかしい）lv:2 ----
+  { name:'ばねの かいだん', lv:2,
     hint:'ゴールは 2だんの うえ。ばねで とべるのは 1だん ぶんだけ。ばねを だいの うえにも おけるよ。',
     inv:{ spring:2 },
     blocks:[[4,2,1],[4,3,1],[4,4,1],[5,2,2],[5,3,2],[5,4,2],[6,3,2],[7,3,2]],
     parts:[['ball',0,3,0],['goal',6,3,0]] },
-  { name:'ばねで カーブ', hard:true,
+  { name:'ばねで カーブ', lv:2,
     hint:'たかい かべは とびこえられない。ばねで むきを 2かい かえて ゴールへ。',
     inv:{ spring:2 },
     blocks:[[1,3,2],[2,3,2],[3,3,2],[4,3,2],[4,5,1],[4,6,1]],
     parts:[['ball',0,1,0],['goal',2,5,0]] },
-  { name:'かぜ → ドミノ → さか', hard:true,
+  { name:'かぜ → ドミノ → さか', lv:2,
     hint:'とまっている ボールを うごかして、さかで まがらせよう。',
     inv:{ domino:3, slope:1 },
     blocks:[[1,1,1],[2,1,1],[3,1,1],[4,1,1],[5,1,1],[7,0,2],[7,1,2],[7,2,2]],
     parts:[['fan',0,1,0],['ball',5,1,4],['goal',6,6,0]] },
-  { name:'さいごの ちょうせん', hard:true,
+  { name:'かぜ ドミノ さか ばね', lv:2,
     hint:'つかわない パーツも まじっているよ。どれを どこに おくか よく かんがえよう。',
     inv:{ domino:3, slope:1, spring:1, block:2 },
     blocks:[[1,6,1],[2,6,1],[3,6,1],[4,6,1],[5,6,1],[7,5,2],[7,6,2],[7,7,2],[5,4,1],[6,2,1]],
     parts:[['fan',0,6,0],['ball',5,6,4],['goal',1,4,0]] },
+  // ---- マスター（とっても むずかしい）----
+  { name:'ゴールは 2つ', lv:3,
+    hint:'ゴールが 2つ あるよ。ボールは ゴールの うえを とおりすぎるので、1つの みちで 2つとも とおろう。ばねで とぶと 2マス さきに おりるよ。',
+    inv:{ spring:2 }, blocks:[],
+    parts:[['ball',0,0,1],['goal',3,5,0],['goal',6,2,0]] },
+  { name:'かぜで はねかえせ', lv:3,
+    hint:'ボールが せんぷうきの かぜに むかって ころがると、おしもどされるよ。いって もどって、2つの ゴールを とおろう。',
+    inv:{ fan:1, spring:1 }, blocks:[],
+    parts:[['ball',3,2,0],['goal',4,2,0],['goal',1,6,0]] },
+  { name:'ばねの めいろ', lv:3,
+    hint:'たかい かべは とびこせない。ばね 3つで まがりかどを つくって、おくの ゴールまで いこう。',
+    inv:{ spring:3 },
+    blocks:[[4,7,2],[4,6,2],[4,5,2],[4,4,2],[0,2,2],[1,2,2],[2,2,2],[3,2,2],[4,2,2],[5,2,2],[7,1,2],[7,2,2],[7,3,2],[7,4,2]],
+    parts:[['ball',0,7,0],['goal',6,0,0]] },
+  { name:'だいれんさ', lv:3,
+    hint:'かぜ → ドミノ → ボール → さか → ばね。ぜんぶ つなげて、2つの ゴールに とどけよう。ドミノは 2つだけ。かぜが とどく ところを よく かんがえよう。つかわない パーツも あるよ。',
+    inv:{ domino:2, slope:1, spring:2, block:1 },
+    blocks:[[1,1,1],[2,1,1],[3,1,1],[4,1,1],[5,1,1],[7,0,2],[7,1,2],[7,2,2],[6,4,1]],
+    parts:[['fan',0,1,0],['ball',5,1,4],['goal',6,6,0],['goal',3,7,0]] },
 ];
 // タイトル画面のデモ（ステージ6の こたえの一例）
 const DEMO_EXTRA = { blocks:[[2,1,1]], parts:[['slope',2,1,1],['spring',2,4,1]] };
@@ -602,6 +662,7 @@ const SFX = {
   clack(v){ tone(1400, .05, 'triangle', Math.min(.3, .05+v*.06)); },
   spring(){ tone(180, .3, 'sine', .35, 720); tone(360, .22, 'triangle', .12, 1100, .02); },
   fall(){ tone(600, .45, 'sine', .18, 140); },
+  bell(){ tone(1568, .6, 'sine', .2); tone(2349, .4, 'sine', .08, null, .02); },
   goal(){ [784,988,1175,1568].forEach((f,k) => { tone(f, .5, 'triangle', .22, null, k*.09); tone(f*2, .35, 'sine', .06, null, k*.09); }); tone(2093, 1.2, 'sine', .12, null, .4); },
 };
 function startFanHum(){
@@ -642,6 +703,8 @@ function startPlay(){
   // ボールとドミノも まさつ 0（たおれた ドミノが ボールを はさんで 止めないように）
   const bm = new CANNON.Material('ball');
   world.addContactMaterial(new CANNON.ContactMaterial(bm, dm, { friction:0, restitution:0.1, contactEquationStiffness:1e7, contactEquationRelaxation:3 }));
+  // ボール同士は よく はねかえる（ビリヤードのように いきおいが つたわる）
+  world.addContactMaterial(new CANNON.ContactMaterial(bm, bm, { friction:0, restitution:0.95, contactEquationStiffness:1e7, contactEquationRelaxation:3 }));
 
   P = { balls:[], dominoes:[], springs:[], fans:[], goals:[], t:0, idleT:0, idleShown:false, lastSnd:new Map() };
 
@@ -801,8 +864,12 @@ function physicsUpdate(dt){
 let bannerTimer = 0;
 function onGoal(g){
   g.anim.t = 1.4; g.anim.hit = true;
-  SFX.goal(); confetti(g.cx, g.base + 0.6, g.cz);
+  confetti(g.cx, g.base + 0.6, g.cz);
   if (state.won) return;
+  // ゴールが いくつか あるときは、ぜんぶ ふんだら クリア
+  const left = P.goals.filter(x => !x.hit).length;
+  if (left > 0){ SFX.bell(); toast('ゴール まで あと ' + left + 'こ！', 1600); return; }
+  SFX.goal();
   state.won = true;
   if (state.game === 'stage'){
     state.cleared[state.stage] = true;
@@ -1076,6 +1143,7 @@ function showOnly(which){
   $('titleOv').classList.toggle('hide', which !== 'title');
   $('stageOv').classList.toggle('hide', which !== 'stage');
   $('clearOv').classList.toggle('hide', which !== 'clear');
+  if (which !== 'hud') closeOdai();
   $('hud').classList.toggle('hide', which !== 'hud' && which !== 'clear');
 }
 
@@ -1087,8 +1155,7 @@ function loadStage(n){
   for (const [t,i,j,d] of s.parts) layout[idxOf(i,j)].part = { type:t, dir:d, locked:true };
   Object.assign(state, { mode:'build', game:'stage', stage:n, tool:null, sel:-1, won:false, inv:{ ...s.inv }, initInv:{ ...s.inv } });
   $('label').innerHTML = 'ステージ ' + (n+1) + '<small>' + s.name + '</small>';
-  $('hint').innerHTML = s.hint + '<br><small>くろい わくの パーツは うごかせないよ。</small>';
-  $('hint').classList.remove('hide');
+  openOdai();
   resetCam();
   rebuildScene(); renderPalette(); uiForMode(); showOnly('hud');
 }
@@ -1096,8 +1163,7 @@ function newFree(){
   if (state.mode === 'play') stopPlay();
   layout = emptyLayout();
   Object.assign(state, { mode:'build', game:'free', stage:-1, tool:null, sel:-1, won:false, inv:{}, initInv:null });
-  $('hint').innerHTML = 'パーツを えらんで マスを タップ。<br>できたら「▶ うごかす」で スタート！';
-  $('hint').classList.remove('hide');
+  openOdai();
   resetCam();
   rebuildScene(); renderPalette(); uiForMode(); showOnly('hud');
 }
@@ -1111,23 +1177,63 @@ function showTitle(){
   Object.assign(state, { mode:'title', game:null, sel:-1, tool:null });
   rebuildScene(); showOnly('title');
 }
+/* ---- おだい ---- */
+function partChips(inv){
+  return Object.keys(inv).filter(t => inv[t] > 0).map(t =>
+    '<span class="odaiPart">' + ICONS[t] + NAMES[t] + ' ×' + inv[t] + '</span>').join('');
+}
+function openOdai(){
+  if (state.game === 'stage'){
+    const s = STAGES[state.stage];
+    $('odaiTag').textContent = 'ステージ ' + (state.stage+1) + ' の おだい';
+    $('odaiTitle').textContent = s.name;
+    $('odaiText').innerHTML = s.hint;
+    $('odaiParts').innerHTML = '<span style="align-self:center;font-weight:700">つかえる パーツ：</span>' + partChips(s.inv);
+    $('odaiNote').textContent = s.parts.filter(p => p[0] === 'goal').length > 1
+      ? 'ゴールが いくつか あるときは、ぜんぶに ボールを とどけよう。くろい わくの パーツは うごかせないよ。'
+      : 'くろい わくの パーツは うごかせないよ。';
+  } else {
+    $('odaiTag').textContent = 'じゆうに つくる';
+    $('odaiTitle').textContent = 'すきな しかけを つくろう';
+    $('odaiText').innerHTML = 'パーツを えらんで マスを タップ。<br>できたら「▶ うごかす」で スタート！';
+    $('odaiParts').innerHTML = '';
+    $('odaiNote').textContent = 'ゴールを おくと、ボールが とどいたときに おしらせするよ。';
+  }
+  state.odai = true;
+  $('odaiOv').classList.remove('hide');
+}
+function closeOdai(){ state.odai = false; $('odaiOv').classList.add('hide'); }
+
+const LEVELS = [
+  { lv:1, title:'れんしゅう', tag:'まずは ここから' },
+  { lv:2, title:'チャレンジ', tag:'むずかしい' },
+  { lv:3, title:'マスター', tag:'とっても むずかしい' },
+];
 function showStageSelect(){
   if (state.mode === 'play') stopPlay();
+  closeOdai();
   state.mode = 'title';
-  const g = $('stageGrid'); g.innerHTML = '';
-  STAGES.forEach((s,k) => {
-    if (k === 0 || (s.hard && !STAGES[k-1].hard)){
-      const h = document.createElement('div'); h.className = 'stgHead';
-      h.textContent = s.hard ? 'チャレンジ（むずかしい）' : 'れんしゅう';
-      g.appendChild(h);
-    }
-    const b = document.createElement('button');
-    b.className = 'btn stg' + (s.hard ? ' hard' : '') + (state.cleared[k] ? ' done' : '');
-    b.innerHTML = '<b>' + (k+1) + '</b><span>' + s.name + '</span>';
-    onTap(b, () => loadStage(k));
-    g.appendChild(b);
-  });
+  const wrap = $('stageWrap'); wrap.innerHTML = '';
+  for (const L of LEVELS){
+    const sec = document.createElement('section'); sec.className = 'sec lv' + L.lv;
+    const nClear = STAGES.filter((s,k) => (s.lv||1) === L.lv && state.cleared[k]).length;
+    const nAll = STAGES.filter(s => (s.lv||1) === L.lv).length;
+    sec.innerHTML = '<h3>' + L.title + ' <i>' + L.tag + '</i><span style="margin-left:auto;font-size:16px">★ ' + nClear + ' / ' + nAll + '</span></h3>';
+    const row = document.createElement('div'); row.className = 'stgRow';
+    STAGES.forEach((s,k) => {
+      if ((s.lv||1) !== L.lv) return;
+      const b = document.createElement('button');
+      b.className = 'btn stg' + (state.cleared[k] ? ' done' : '');
+      b.setAttribute('aria-label', 'ステージ ' + (k+1) + ' ' + s.name + (state.cleared[k] ? '（クリア）' : ''));
+      b.innerHTML = '<span class="star" aria-hidden="true">★</span><b>' + (k+1) + '</b><span class="nm">' + s.name + '</span>'
+        + '<span class="ic" aria-hidden="true">' + Object.keys(s.inv).map(t => ICONS[t]).join('') + '</span>';
+      onTap(b, () => loadStage(k));
+      row.appendChild(b);
+    });
+    sec.appendChild(row); wrap.appendChild(sec);
+  }
   showOnly('stage');
+  $('stageOv').scrollTop = 0;
 }
 function showClear(){
   const n = state.stage, last = n >= STAGES.length - 1;
@@ -1137,6 +1243,8 @@ function showClear(){
 }
 
 onTap($('goStage'), showStageSelect);
+onTap($('odaiOk'), closeOdai);
+onTap($('odaiBtn'), openOdai);
 onTap($('goFree'), newFree);
 onTap($('stageBack'), showTitle);
 onTap($('menuBtn'), () => state.game === 'stage' ? showStageSelect() : showTitle());
@@ -1211,6 +1319,7 @@ const G = window.__G = {
     balls: () => P ? P.balls.map(b => ({ x:b.body.position.x, y:b.body.position.y, z:b.body.position.z, alive:b.alive, captured:!!b.goaled })) : [],
     simTime: () => P ? P.t : 0,
     won: () => state.won,
+    noRender: v => { G.noRender = !!v; },
     // 実時間に関係なく物理を進める（テスト高速化用）
     stepSim: sec => { if (!P) return; for (let k=0; k<Math.round(sec/FIX); k++){ preStep(); world.step(FIX); postStep(); } physicsUpdate(0); },
   }
@@ -1223,10 +1332,10 @@ function loop(now){
   G.frames++; G.elapsed += dt;
   if (state.mode === 'title' && !$('titleOv').classList.contains('hide')) cam.taz += dt*0.12;
   updateCamera(dt);
-  if (state.mode === 'play' && world) physicsUpdate(dt);
+  if (state.mode === 'play' && world && !state.odai) physicsUpdate(dt);   // おだいを ひらいている あいだは とめる
   animateParts(dt);
   updateConfetti(dt);
-  renderer.render(scene, camera);
+  if (!G.noRender) renderer.render(scene, camera);   // テスト高速化用（ふだんは つねに えがく）
 }
 showTitle();
 requestAnimationFrame(loop);
