@@ -7,7 +7,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>からくりスイッチ</title>
+<title>ピタゴラ4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
@@ -87,19 +87,27 @@ rt{font-size:.5em;font-weight:400}
 .bigBtns{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
 .bigBtns .btn{font-size:24px;padding:16px 26px;border-radius:20px;min-width:220px}
 .bigBtns .btn.main{background:var(--go)}
-#stageGrid{display:grid;grid-template-columns:repeat(3,minmax(170px,1fr));gap:14px}
-@media (max-width:640px){#stageGrid{grid-template-columns:repeat(2,minmax(140px,1fr))}}
+#stageGrid{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:12px}
+
+@media (max-width:640px){#stageGrid{grid-template-columns:repeat(2,minmax(130px,1fr))}}
 .stg{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:12px 16px;text-align:left;min-height:88px}
 .stg b{font-size:28px}
-.stg span{font-size:17px;font-weight:700}
+.stg span{font-size:17px;font-weight:700;word-break:keep-all}
 .stg.done{background:#FFF4C9}
 .stg.done b::after{content:" ★";color:var(--goal)}
 #clearOv{background:rgba(31,45,74,.28)}
-@media (prefers-reduced-motion:reduce){.btn,#toast{transition:none}}
+#goalBanner{position:fixed;left:50%;top:calc(120px + env(safe-area-inset-top));transform:translate(-50%,0);pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:10px;
+  background:rgba(255,255,255,.95);border:4px solid var(--ink);border-radius:24px;box-shadow:0 8px 0 var(--ink);padding:18px 26px;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+#goalBanner p{margin:0;font-size:18px;font-weight:700}
+@keyframes pop{from{transform:translate(-50%,0) scale(.3);opacity:0}to{transform:translate(-50%,0) scale(1);opacity:1}}
+#ver{position:fixed;right:6px;bottom:2px;font-size:10px;opacity:.45;pointer-events:none}
+.stgHead{grid-column:1/-1;margin:6px 0 -4px;font-size:18px;font-weight:700;text-align:left}
+.stg.hard{border-style:dashed}
+@media (prefers-reduced-motion:reduce){.btn,#toast{transition:none}#goalBanner{animation:none}}
 </style>
 </head>
 <body>
-<!-- build: 2026-09-24 v1 -->
+<!-- build: 2026-09-25 v2 -->
 
 <div id="hud" class="hide">
   <div id="topbar">
@@ -123,10 +131,15 @@ rt{font-size:.5em;font-weight:400}
   <button class="btn" id="playBtn">▶ うごかす</button>
 </div>
 <div id="toast"></div>
+<div id="goalBanner" class="hide" aria-live="polite">
+  <div class="tiles"><span>ゴ</span><span>ー</span><span>ル</span><span>！</span></div>
+  <p>「⟲ もどす」で もういちど うごかせるよ</p>
+</div>
+<div id="ver">v2026-09-25</div>
 
 <div class="ov" id="titleOv">
   <div class="card">
-    <div class="tiles" aria-label="からくりスイッチ"><span>か</span><span>ら</span><span>く</span><span>り</span><span>ス</span><span>イ</span><span>ッ</span><span>チ</span></div>
+    <div class="tiles" aria-label="ピタゴラ4"><span>ピ</span><span>タ</span><span>ゴ</span><span>ラ</span><span>4</span></div>
     <p class="lead">パーツを ならべて、ボールを ゴールまで とどけよう</p>
     <div class="bigBtns">
       <button class="btn main" id="goStage">ステージ</button>
@@ -244,6 +257,27 @@ const STAGES = [
     inv:{ slope:1, spring:1, block:2 },
     blocks:[[0,1,2],[1,1,2],[3,0,3],[3,1,3],[3,2,3],[1,5,1],[2,5,1],[3,5,1]],
     parts:[['ball',0,1,0],['goal',2,7,0]] },
+  // ---- チャレンジ（むずかしい）----
+  { name:'ばねの かいだん', hard:true,
+    hint:'ゴールは 2だんの うえ。ばねで とべるのは 1だん ぶんだけ。ばねを だいの うえにも おけるよ。',
+    inv:{ spring:2 },
+    blocks:[[4,2,1],[4,3,1],[4,4,1],[5,2,2],[5,3,2],[5,4,2],[6,3,2],[7,3,2]],
+    parts:[['ball',0,3,0],['goal',6,3,0]] },
+  { name:'ばねで カーブ', hard:true,
+    hint:'たかい かべは とびこえられない。ばねで むきを 2かい かえて ゴールへ。',
+    inv:{ spring:2 },
+    blocks:[[1,3,2],[2,3,2],[3,3,2],[4,3,2],[4,5,1],[4,6,1]],
+    parts:[['ball',0,1,0],['goal',2,5,0]] },
+  { name:'かぜ → ドミノ → さか', hard:true,
+    hint:'とまっている ボールを うごかして、さかで まがらせよう。',
+    inv:{ domino:3, slope:1 },
+    blocks:[[1,1,1],[2,1,1],[3,1,1],[4,1,1],[5,1,1],[7,0,2],[7,1,2],[7,2,2]],
+    parts:[['fan',0,1,0],['ball',5,1,4],['goal',6,6,0]] },
+  { name:'さいごの ちょうせん', hard:true,
+    hint:'つかわない パーツも まじっているよ。どれを どこに おくか よく かんがえよう。',
+    inv:{ domino:3, slope:1, spring:1, block:2 },
+    blocks:[[1,6,1],[2,6,1],[3,6,1],[4,6,1],[5,6,1],[7,5,2],[7,6,2],[7,7,2],[5,4,1],[6,2,1]],
+    parts:[['fan',0,6,0],['ball',5,6,4],['goal',1,4,0]] },
 ];
 // タイトル画面のデモ（ステージ6の こたえの一例）
 const DEMO_EXTRA = { blocks:[[2,1,1]], parts:[['slope',2,1,1],['spring',2,4,1]] };
@@ -258,7 +292,7 @@ const state = {
   tool:null,
   sel:-1,
   inv:{},
-  cleared:[false,false,false,false,false,false],
+  cleared:[],
   won:false,
 };
 let layout = emptyLayout();
@@ -312,6 +346,12 @@ scene.add(slab);
 
 // ---- 共有マテリアル ----
 function std(c, o={}){ return new THREE.MeshStandardMaterial(Object.assign({ color:c, roughness:.55, metalness:0 }, o)); }
+function checkerTexture(){
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const g = c.getContext('2d');
+  for (let a=0;a<4;a++) for (let b=0;b<4;b++){ g.fillStyle = (a+b)%2 ? '#1F2D4A' : '#FFFFFF'; g.fillRect(a*32,b*32,32,32); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.magFilter = THREE.NearestFilter; return t;
+}
 function ballTexture(){
   const c = document.createElement('canvas'); c.width = 256; c.height = 128;
   const g = c.getContext('2d');
@@ -325,7 +365,8 @@ const M = {
   slope: std(0xF28C28), domino: std(0x2F6FDB), dominoTop: std(0xFFFFFF),
   springPad: std(0xD6367A), coil: std(0xE9699F, { metalness:.25, roughness:.35 }), gray: std(0x9AA3B0),
   fan: std(0x18A0B3), blade: std(0xFFFFFF),
-  goal: std(0xFFC933, { metalness:.35, roughness:.3, side:THREE.DoubleSide }), flag: std(0xFFFFFF, { side:THREE.DoubleSide }),
+  goal: std(0xFFC933, { metalness:.35, roughness:.3, side:THREE.DoubleSide }), flag: std(0xE23B3B, { side:THREE.DoubleSide }),
+  pad: new THREE.MeshStandardMaterial({ map:checkerTexture(), roughness:.6 }),
   wood1: std(0xE2B676), wood2: std(0xD19E5C), lock1: std(0xA99A88), lock2: std(0x978874),
   arrow: new THREE.MeshBasicMaterial({ color:0xffffff }),
   wind: new THREE.MeshBasicMaterial({ color:0x9BE7F5, transparent:true, opacity:.2, depthWrite:false }),
@@ -370,10 +411,10 @@ const GEO = {
   hub: new THREE.SphereGeometry(0.06, 12, 8),
   wind: new THREE.BoxGeometry(WIND_LEN-0.5, 1.2, 0.9),
   streak: new THREE.BoxGeometry(0.35, 0.025, 0.025),
-  cup: new THREE.CylinderGeometry(0.34, 0.26, 0.36, 28, 1, true),
-  cupBottom: new THREE.CircleGeometry(0.26, 28),
-  rim: new THREE.TorusGeometry(0.34, 0.03, 8, 28),
-  pole: new THREE.CylinderGeometry(0.02, 0.02, 0.95, 8),
+  pad: new THREE.BoxGeometry(0.9, 0.03, 0.9),
+  pole: new THREE.CylinderGeometry(0.025, 0.025, 1.0, 8),
+  bell: new THREE.ConeGeometry(0.09, 0.12, 16, 1, true),
+  bellTop: new THREE.SphereGeometry(0.03, 8, 6),
   flag: flagGeometry(),
   arrow: arrowGeometry(),
   ring: new THREE.RingGeometry(0.25, 0.31, 28),
@@ -439,14 +480,14 @@ function makePart(type, dir, play){
       break;
     }
     case 'goal': {
-      const cup = new THREE.Group();
-      const c = mesh(GEO.cup, M.goal); c.position.y = 0.18; cup.add(c);
-      const bt = mesh(GEO.cupBottom, M.goal); bt.rotation.x = -Math.PI/2; bt.position.y = 0.005; cup.add(bt);
-      const rim = mesh(GEO.rim, M.goal); rim.rotation.x = Math.PI/2; rim.position.y = 0.36; cup.add(rim);
-      g.add(cup);
-      const pole = mesh(GEO.pole, M.gray); pole.position.set(-0.4, 0.475, -0.4); g.add(pole);
-      const fl = mesh(GEO.flag, M.flag); fl.position.set(-0.4, 0.72, -0.4); g.add(fl);
-      anim.cup = cup; anim.flag = fl; anim.t = 0;
+      // ゴールマット：ボールが のると はたが あがって ベルが なる
+      const pad = mesh(GEO.pad, M.pad); pad.position.y = 0.015; g.add(pad);
+      const pole = mesh(GEO.pole, M.gray); pole.position.set(-0.4, 0.5, -0.4); g.add(pole);
+      const bell = new THREE.Group(); bell.position.set(-0.4, 1.0, -0.4);
+      const bc = mesh(GEO.bell, M.goal); bc.position.y = -0.06; bell.add(bc); bell.add(mesh(GEO.bellTop, M.goal));
+      g.add(bell);
+      const fl = mesh(GEO.flag, M.flag); fl.position.set(-0.4, 0.06, -0.4); fl.rotation.y = -Math.PI/4; g.add(fl);
+      anim.flag = fl; anim.bell = bell; anim.t = 0; anim.up = 0;
       break;
     }
   }
@@ -499,7 +540,7 @@ function updateSelFrame(){
 /* =========================================================
    カメラ
    ========================================================= */
-const CAM_CENTER = new THREE.Vector3(N/2, 0.4, N/2);
+const CAM_CENTER = new THREE.Vector3(N/2, 0.4, N/2 + 0.9); // パレットに かくれないよう 少し手前を中心に
 const cam = { az:-0.5, el:0.86, dist:13, taz:-0.5, tel:0.86, tdist:13 };
 function updateCamera(dt){
   const k = 1 - Math.exp(-10*dt);
@@ -667,6 +708,7 @@ function startPlay(){
 
   world.addEventListener('beginContact', e => contactSound(e.bodyA, e.bodyB));
   if (P.fans.length) startFanHum();
+  if (state.game === 'free' && !P.goals.length) toast('ゴールを おくと、とどいたときに おしらせするよ', 2600);
   SFX.start();
   uiForMode();
 }
@@ -724,13 +766,12 @@ function postStep(){
         }
       }
     }
-    // ゴール
+    // ゴール：ボールが ゴールマットに ふれたら
     for (const g of P.goals){
-      const rx = p.x - g.cx, rz = p.z - g.cz;
-      if (Math.abs(rx) < 0.45 && Math.abs(rz) < 0.45 && p.y > g.base - 0.1 && p.y < g.base + 1.6){
-        b.cap = { t:0, from:new THREE.Vector3(p.x, p.y, p.z), to:new THREE.Vector3(g.cx, g.base + 0.2, g.cz), goal:g };
-        world.removeBody(b.body);
-        break;
+      if (g.hit) continue;
+      const rx = p.x - g.cx, rz = p.z - g.cz, bot = p.y - R;
+      if (Math.abs(rx) < 0.45 && Math.abs(rz) < 0.45 && bot < g.base + 0.12 && bot > g.base - 0.15){
+        g.hit = true; b.goaled = true; onGoal(g);
       }
     }
     // おちた
@@ -745,15 +786,7 @@ function physicsUpdate(dt){
   if (P.acc > FIX) P.acc = 0;
   for (const b of P.balls){
     if (!b.alive) continue;
-    if (b.cap){
-      b.cap.t += dt;
-      const k = Math.min(1, b.cap.t/0.45), e = 1 - Math.pow(1-k, 3);
-      b.mesh.position.lerpVectors(b.cap.from, b.cap.to, e);
-      b.mesh.position.y += Math.sin(k*Math.PI)*0.35;
-      if (k >= 1 && !b.cap.done){ b.cap.done = true; onGoal(b.cap.goal); }
-    } else {
-      b.mesh.position.copy(b.body.position); b.mesh.quaternion.copy(b.body.quaternion);
-    }
+    b.mesh.position.copy(b.body.position); b.mesh.quaternion.copy(b.body.quaternion);
   }
   for (const d of P.dominoes){ d.mesh.position.copy(d.body.position); d.mesh.quaternion.copy(d.body.quaternion); }
 
@@ -765,19 +798,24 @@ function physicsUpdate(dt){
   }
 }
 
+let bannerTimer = 0;
 function onGoal(g){
-  g.anim.t = 1.2;
-  SFX.goal(); confetti(g.cx, g.base + 0.5, g.cz);
+  g.anim.t = 1.4; g.anim.hit = true;
+  SFX.goal(); confetti(g.cx, g.base + 0.6, g.cz);
   if (state.won) return;
   state.won = true;
   if (state.game === 'stage'){
     state.cleared[state.stage] = true;
-    setTimeout(() => { if (state.mode === 'play') showClear(); }, 1300);
-  } else toast('ゴール！', 1800);
+    setTimeout(() => { if (state.mode === 'play') showClear(); }, 1500);
+  } else {
+    const b = $('goalBanner'); b.classList.add('hide'); void b.offsetWidth; b.classList.remove('hide');
+    clearTimeout(bannerTimer); bannerTimer = setTimeout(() => b.classList.add('hide'), 3200);
+  }
 }
 
 function stopPlay(){
   world = null; P = null; stopFanHum();
+  $('goalBanner').classList.add('hide');
   clearConfetti();
   state.mode = 'build';
   rebuildScene(false);
@@ -1078,8 +1116,13 @@ function showStageSelect(){
   state.mode = 'title';
   const g = $('stageGrid'); g.innerHTML = '';
   STAGES.forEach((s,k) => {
+    if (k === 0 || (s.hard && !STAGES[k-1].hard)){
+      const h = document.createElement('div'); h.className = 'stgHead';
+      h.textContent = s.hard ? 'チャレンジ（むずかしい）' : 'れんしゅう';
+      g.appendChild(h);
+    }
     const b = document.createElement('button');
-    b.className = 'btn stg' + (state.cleared[k] ? ' done' : '');
+    b.className = 'btn stg' + (s.hard ? ' hard' : '') + (state.cleared[k] ? ' done' : '');
     b.innerHTML = '<b>' + (k+1) + '</b><span>' + s.name + '</span>';
     onTap(b, () => loadStage(k));
     g.appendChild(b);
@@ -1137,9 +1180,11 @@ function animateParts(dt){
     }
     if (a.type === 'goal'){
       a.t = Math.max(0, a.t - dt);
-      const s = 1 + Math.sin(a.t*14) * 0.12 * a.t;
-      a.cup.scale.set(s, 1/s, s);
-      a.flag.rotation.y = Math.sin(G.elapsed*3) * 0.25;
+      a.bell.rotation.z = Math.sin(a.t*22) * 0.5 * a.t;
+      if (a.hit) a.up = Math.min(1, a.up + dt*2.2);
+      const e = a.up < 1 ? 1 - Math.pow(1 - a.up, 3) * Math.cos(a.up*9) : 1;
+      a.flag.position.y = 0.06 + 0.72*e;
+      a.flag.rotation.y = -Math.PI/4 + Math.sin(G.elapsed*4) * 0.2 * a.up;
     }
   }
   if (selFrame.visible){ const s = 1.04 + Math.sin(G.elapsed*6)*0.03; selFrame.scale.set(s,1,s); }
@@ -1163,7 +1208,7 @@ const G = window.__G = {
     start: () => { if (state.mode === 'build') startPlay(); },
     reset: () => { if (state.mode === 'play') stopPlay(); },
     tap: (x,y) => handleTap(pickCell(x,y)),
-    balls: () => P ? P.balls.map(b => ({ x:b.body.position.x, y:b.body.position.y, z:b.body.position.z, alive:b.alive, captured:!!b.cap })) : [],
+    balls: () => P ? P.balls.map(b => ({ x:b.body.position.x, y:b.body.position.y, z:b.body.position.z, alive:b.alive, captured:!!b.goaled })) : [],
     simTime: () => P ? P.t : 0,
     won: () => state.won,
     // 実時間に関係なく物理を進める（テスト高速化用）
